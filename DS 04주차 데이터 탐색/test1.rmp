@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.3.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.3.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.3.001" expanded="true" height="68" name="Retrieve student-mat" width="90" x="45" y="85">
+        <parameter key="repository_entry" value="student-mat"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.3.001" expanded="true" height="103" name="Multiply" width="90" x="179" y="85"/>
+      <operator activated="true" class="sort" compatibility="9.3.001" expanded="true" height="82" name="Sort (2)" width="90" x="380" y="187">
+        <parameter key="attribute_name" value="G3"/>
+        <parameter key="sorting_direction" value="increasing"/>
+      </operator>
+      <operator activated="true" class="filter_example_range" compatibility="9.3.001" expanded="true" height="82" name="Filter Example Range (2)" width="90" x="514" y="187">
+        <parameter key="first_example" value="1"/>
+        <parameter key="last_example" value="40"/>
+        <parameter key="invert_filter" value="false"/>
+      </operator>
+      <operator activated="true" class="sort" compatibility="9.3.001" expanded="true" height="82" name="Sort" width="90" x="380" y="85">
+        <parameter key="attribute_name" value="G3"/>
+        <parameter key="sorting_direction" value="decreasing"/>
+      </operator>
+      <operator activated="true" class="filter_example_range" compatibility="9.3.001" expanded="true" height="82" name="Filter Example Range" width="90" x="514" y="85">
+        <parameter key="first_example" value="1"/>
+        <parameter key="last_example" value="40"/>
+        <parameter key="invert_filter" value="false"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="9.3.001" expanded="true" height="103" name="Append" width="90" x="648" y="85">
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <connect from_op="Retrieve student-mat" from_port="output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Sort" to_port="example set input"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Sort (2)" to_port="example set input"/>
+      <connect from_op="Sort (2)" from_port="example set output" to_op="Filter Example Range (2)" to_port="example set input"/>
+      <connect from_op="Filter Example Range (2)" from_port="example set output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Sort" from_port="example set output" to_op="Filter Example Range" to_port="example set input"/>
+      <connect from_op="Filter Example Range" from_port="example set output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Append" from_port="merged set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
